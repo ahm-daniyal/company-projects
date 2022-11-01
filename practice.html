@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hyva Alpine and Tailwind Tutorials</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.8.12/tailwind.css" />
+    <script src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
+</head>
+<body>
+    <div class="header text-center bg-red-700 py-5 text-white">
+        <h2>Hyva Alpine and Tailwind CSS</h2>
+    </div>
+    <div x-data="{guess: '', num: Math.round(Math.random() * 10)}" class="text-center">
+        <h2>Guess The Number</h2>
+        <input type="text" x-ref="input" class="border-2 border-black text-xl">
+        <div x-show="guess != ''">
+            <p x-text="guess == num ? 'You Win' : 'You Loose'" class="text-3xl"></p>
+            <p x-text="num" class="text-red-500"></p>
+        </div>
+        <button @click="guess = $refs.input.value" class="py-2 px-3 bg-blue-500 text-white hover:bg-blue-200">Guess</button>
+    </div>
+    <hr>
+    <div x-data="{task: '', completed: [], nCompleted: []}" x-init="$watch('nCompleted', () => {task=''; $refs.input.focus()})" class="text-center">
+        <h2>Todo App List</h2>
+        <div class="flex justify-center content-center">
+            <input type="text" class="border-2 border-black text-xl" x-model="task" x-ref="input" x-on:keyup.enter="nCompleted.push(task)">
+            <button @click="nCompleted.push(task)" class="py-2 px-3 bg-green-500 text-white hover:bg-green-200">Add Task</button>
+        </div>
+        <div class="flex justify-center content-center">
+            <ul>
+                <li>For Non Completed Task</li>
+                <template x-for="(t, index) in nCompleted" :key="index">
+                    <li class="mt-1">
+                        <span x-text="t"></span>
+                        <button class="py-1 px-3 bg-red-200" @click="completed.push(nCompleted[index]); nCompleted = nCompleted.filter(text => text != nCompleted[index])">x</button>
+                    </li>
+                </template>
+            </ul>
+            <ul>
+                <li class="ml-5">For Completed Task</li>
+                <template x-for="(t, index) in completed" :key="index">
+                    <li x-text="t"></li>
+                </template>
+            </ul>
+        </div>
+    </div>
+    <hr>
+    <div x-data="{text: '', list: ['Pakistan', 'Nepal', 'Afghanistan', 'India', 'Australia', 'Sri Lanka'
+    , 'England'], filter: []}" class="text-center">
+        <h2>Filter Suggestion</h2>
+        <input type="text" x-model="text" class="border-2 border-black text-xl"
+               @keyup.debounce="filter = list.filter(item => {
+                let regx = new RegExp(text.toLowerCase());
+                return (regx.test(item) && text.length != 0) ? item : false;
+               })">
+        <ul>
+            <template x-for="(item, index) in filter" :key="index">
+                <li x-text="item"></li>
+            </template>
+        </ul>
+    </div>
+
+<!--  Alpine JS Tutorials  -->
+<!-- Alpine JS x-data, x-text, x-html concepts  -->
+    <div x-data="{name: 'Daniyal' , age: 23, gender: 'male', country: 'Lahore, <b>Pakistan</b>'}">
+        <p x-text="name"></p>
+        <p x-html="country"></p>
+    </div>
+
+<!-- Alpine JS x-data and method concepts -->
+    <div x-data="{message: 'Click me to change',
+      change(){
+        this.message = 'Button Clicked'
+      }}">
+        <p x-text="message" @click="change()"></p>
+    </div>
+
+<!-- Alpine JS show/hide data concepts-->
+    <div x-data="{open: false,
+        toggle(){
+            this.open = !this.open
+        }}">
+        <button @click="toggle()">Click</button>
+        <div x-show="open">
+            Content...
+        </div>
+    </div>
+
+<!-- Alpine JS x-if condition -->
+    <div x-data="{box: false,
+        toggle(){
+            this.box = !this.box
+        }}">
+        <button @click="toggle()">Click Box</button>
+        <template x-if="box">
+            <p>Content Here...</p>
+        </template>
+    </div>
+
+<!-- Alpine JS x-for condition-->
+    <div x-data="{lists: ['Pakistan', 'Nepal', 'England', 'Australia', 'India']}">
+        <template x-for="(l,index) in lists" :key="index">
+            <ul>
+                <li x-text="l"></li>
+            </ul>
+        </template>
+    </div>
+
+<!-- Alpine JS x-for with range -->
+    <div x-data="">
+        <template x-for=" n in 5">
+            <p x-text="n"></p>
+        </template>
+    </div>
+
+<!-- Alpine JS with bind statement-->
+    <div x-data="{clicked: false}">
+        <button class="bordered" x-bind:class="clicked ? 'yellow' : ''" @click="clicked = !clicked">Click</button>
+    </div>
+    <style>
+        .yellow{
+            background-color: yellow;
+        }
+        .bordered{
+            border: 2px solid grey;
+        }
+    </style>
+
+<!-- Alpine JS with style bind -->
+    <div x-data="{clicked: false}">
+        <button class="bordered" x-bind:style="{backgroundColor: clicked ? 'red' : ''}" @click="clicked = !clicked">Click Please</button>
+    </div>
+
+<!-- Alpine JS with id bind -->
+    <div x-data="{id: ''} ">
+        <button x-bind:id="id" @click="id = Math.round(Math.random() * 1000)">Click Me</button>
+    </div>
+
+<!-- Alpine JS Challenge Practice -->
+    <div x-data="{colors: ['red', 'green', 'blue']}">
+        <template x-for="color in colors">
+            <div :style="{backgroundColor: color}" style="width: 40px; height: 40px; display: inline-block"></div>
+        </template>
+    </div>
+
+<!-- Alpine JS x-on events -->
+    <div x-data="{message: false}">
+        <input type="text" x-on:keyup="console.log('Welcome')" style="border: 1px solid black" placeholder="Enter Text">
+        <button @click="message = !message">Click</button>
+        <template x-if="message">
+            <p>Content Here...</p>
+        </template>
+    </div>
+
+<!-- Alpine JS x-model concepts -->
+    <div x-data="{message: ''}">
+        <input type="text" x-model="message" placeholder="Enter Text" style="border: 1px solid black">
+        <p x-text="message"></p>
+    </div>
+
+<!-- Alpine JS Challenge Practice -->
+    <div x-data="{text: '', bg: '', id: ''}">
+        <input type="text" x-model="text" placeholder="Enter Button Text" style="border: 1px solid black;">
+        <input type="text" x-model="bg" placeholder="Enter Button Background Color" style="border: 1px solid black;">
+        <input type="text" x-model="id" placeholder="Enter Button ID" style="border: 1px solid black;">
+        <button x-text="text" x-bind:style="{backgroundColor: bg}" :id="id"></button>
+    </div>
+
+<!-- Alpine JS x-effect -->
+    <div x-data="{name:'Daniyal'}">
+        <button @click="name= 'Ahmed'">Change</button>
+        <p x-effect="'Hello ' + name "></p>
+        <p x-text="name"></p>
+    </div>
+
+<!-- Alpine JS x-ignore -->
+    <div x-data="{name: 'Bilal'}">
+        <div x-ignore>
+            <p x-text="name"></p>
+        </div>
+    </div>
+
+<!-- Alpine JS x-ref -->
+    <div x-data>
+        <input type="text" placeholder="Enter Email" x-ref="msg">
+        <button @click="$refs.msg.style.border = '3px solid red'">Check</button>
+    </div>
+
+<!-- x-teleport -->
+    <div x-data>
+        <p>Some Long Context</p>
+        <span x-data="{modal: false}">
+            <button @click="modal= !modal">Click</button>
+            <template x-teleport="body">
+                <div x-show="modal">
+                    <p>Content Here...</p>
+                </div>
+            </template>
+        </span>
+    </div>
+
+<!-- Alpine JS $nextTick -->
+    <div x-data="{name: 'Ahmed'}">
+        <button @click="name = 'Daniyal', $nextTick(() => console.log($refs.p.innerText))">Click</button>
+        <p x-ref="p" x-text="name"></p>
+    </div>
+</body>
+</html>
